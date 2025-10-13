@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Encontro06">
         <activity
+            android:name=".SobremesaActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
