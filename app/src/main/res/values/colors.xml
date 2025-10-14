@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
         <!--
-        Hugo
-        -->
-        <!--Paulo Fischer -->
-        <!--Larissa -->
+        Larissa
+        Luciano
+
+
+
+        Paola -->
         <color name="md_theme_primary">#B1D18A</color>
         <color name="md_theme_onPrimary">#1F3701</color>
         <color name="md_theme_primaryContainer">#354E16</color>
@@ -146,4 +148,5 @@
         <color name="md_theme_surfaceContainer_highContrast">#2F312A</color>
         <color name="md_theme_surfaceContainerHigh_highContrast">#3A3C35</color>
         <color name="md_theme_surfaceContainerHighest_highContrast">#454840</color>
+
 </resources>
