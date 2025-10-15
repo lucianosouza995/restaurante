@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="?attr/colorSurface"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:src="@drawable/logo"
-            android:contentDescription="Logo Sabor &amp; Arte"
+            android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Categorias"
-            android:textColor="@color/accent_gold"
+            android:textColor="?attr/colorPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="24dp"
@@ -53,8 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Entradas (8)"
-                android:textColor="@color/text_primary"
-                app:chipBackgroundColor="@color/card_background"/>
+                android:textColor="?attr/colorOnSurface"
+                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_principal"
@@ -62,8 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Principal (12)"
-                android:textColor="@color/text_primary"
-                app:chipBackgroundColor="@color/card_background"/>
+                android:textColor="?attr/colorOnSurface"
+                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sobremesa"
@@ -71,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sobremesa (6)"
-                android:textColor="@color/text_primary"
-                app:chipBackgroundColor="@color/card_background"/>
+                android:textColor="?attr/colorOnSurface"
+                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/card_background"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
             app:cardCornerRadius="12dp"
             app:strokeWidth="0dp"
             app:layout_constraintTop_toBottomOf="@id/chip_group_categorias"
@@ -108,7 +108,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Risotto Funghi"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginStart="16dp"
@@ -121,7 +121,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_attach_money"
-                    app:tint="@color/accent_gold"
+                    app:tint="?attr/colorPrimary"
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@id/text_nome_prato"
                     app:layout_constraintStart_toStartOf="@id/text_nome_prato"/>
@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="R$ 45,00"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginStart="8dp"
                     app:layout_constraintStart_toEndOf="@id/icon_preco"
                     app:layout_constraintBottom_toBottomOf="@id/icon_preco"
@@ -142,7 +142,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_timer"
-                    app:tint="@color/accent_gold"
+                    app:tint="?attr/colorPrimary"
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@id/icon_preco"
                     app:layout_constraintStart_toStartOf="@id/icon_preco"/>
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="25 min"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginStart="8dp"
                     app:layout_constraintStart_toEndOf="@id/icon_tempo"
                     app:layout_constraintBottom_toBottomOf="@id/icon_tempo"
@@ -166,7 +166,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/card_background"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
             app:cardCornerRadius="12dp"
             app:strokeWidth="0dp"
             app:layout_constraintTop_toBottomOf="@id/card_prato"
@@ -190,7 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Avalie nossa experiência"
-                    android:textColor="@color/accent_gold"
+                    android:textColor="?attr/colorPrimary"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
