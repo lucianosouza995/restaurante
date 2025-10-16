@@ -8,6 +8,14 @@
 
         <!--Paola-->
         <!-- Paulo Fischer -->
+        <color name="app_background">#1C1C1E</color>
+        <color name="card_background">#2C2C2E</color>
+        <color name="primary_text">#FFFFFF</color>
+        <color name="secondary_text">#B0B0B0</color>
+        <color name="accent_green">#8BC34A</color>
+        <color name="accent_green_darker">#689F38</color>
+        <color name="divider_color">#424242</color>
+
         <color name="md_theme_primary">#B1D18A</color>
         <color name="md_theme_onPrimary">#1F3701</color>
         <color name="md_theme_primaryContainer">#354E16</color>
