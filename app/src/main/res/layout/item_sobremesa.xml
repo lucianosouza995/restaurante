@@ -36,7 +36,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:contentDescription="Imagem de Pudim de Leite Condensado"
-                    tools:src="@drawable/pudim_2"/>
+                    tools:src="@drawable/pudim"/>
 
                 <TextView
                     android:id="@+id/textViewName_2"
