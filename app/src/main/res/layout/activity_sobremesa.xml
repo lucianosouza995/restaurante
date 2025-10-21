@@ -11,7 +11,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/app_background"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,8 +23,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDesserts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:clipToPadding="false"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,13 +37,14 @@
 
         <LinearLayout
             android:id="@+id/bottom_bar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/card_background"
+            android:background="@color/app_background"
             android:gravity="center_vertical"
+            android:padding="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" >
 
             <LinearLayout
@@ -69,6 +70,18 @@
                         android:textStyle="bold"/>
 
             </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCheckout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finalizar comprar e pagar"
+                android:backgroundTint="@color/accent_green"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="08dp"
+                app:cornerRadius="08dp"
+                android:enabled="false"/>
 
         </LinearLayout>
 
