@@ -18,6 +18,10 @@ private lateinit var buttonCheckout: Button
 
 private lateinit var toolbar: Toolbar
 
+private lateinit var dessertAdapter: SobremesaAdapter
+
+private val dessertList = mutableListOf<Sobremesa>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,9 +46,17 @@ private lateinit var toolbar: Toolbar
     }
 
     private fun setupRecyclerView() {
+        dessertAdapter
+
 
     }
+    private fun loadDesserts() {
+        dessertList.clear()
 
+        dessertList.add(Sobremesa(1,"Pudim de Leite Condensado", "Clássico Pudim",15.0,R.drawable.pudim ))
+
+
+    }
     private fun updateTotal() {
 
     }
