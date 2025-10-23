@@ -127,15 +127,15 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="Adicionar"
             android:textColor="@color/accent_green"
             android:textStyle="bold"
-            android:enabled="false"
             app:layout_constraintBottom_toBottomOf="@id/quantity_controls_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/quantity_controls_2"
             tools:text="Adicionar"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
