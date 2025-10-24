@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+
+
         <ImageView
             android:id="@+id/logo_image"
             android:layout_width="0dp"
@@ -38,41 +40,42 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_categorias"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:chipSpacingHorizontal="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/title_categorias"
+            app:chipSpacingHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/title_categorias"
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_entradas"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entradas (8)"
+                android:text="Entradas"
                 android:textColor="?attr/colorOnSurface"
-                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
+                app:chipBackgroundColor="?attr/colorSurfaceContainer" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_principal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Principal (12)"
+                android:text="Principal"
                 android:textColor="?attr/colorOnSurface"
-                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
+                app:chipBackgroundColor="?attr/colorSurfaceContainer" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sobremesa"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sobremesa (6)"
+                android:text="Sobremesa "
                 android:textColor="?attr/colorOnSurface"
-                app:chipBackgroundColor="?attr/colorSurfaceContainer"/>
+                app:chipBackgroundColor="?attr/colorSurfaceContainer" />
 
         </com.google.android.material.chip.ChipGroup>
 

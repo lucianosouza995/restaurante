@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -314,7 +314,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:contentDescription="Imagem de Mousse de Maracujá"
-                    tools:src="@drawable/mousse_maracuja"/>
+                    tools:src="@drawable/mousse"/>
 
                 <TextView
                     android:id="@+id/textViewName_4"
@@ -538,10 +538,6 @@
                         android:contentDescription="Aumentar quantidade"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_wei
                 <TextView
                     android:id="@+id/textViewItemTotal_5"
                     android:layout_width="wrap_content"
@@ -571,9 +567,10 @@
                     tools:text="Adicionar"
                     tools:visibility="visible"/>
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
