@@ -1,8 +1,8 @@
 package com.example.encontro06
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -37,6 +38,12 @@ private val dessertList = mutableListOf<Sobremesa>()
         textViewTotal =findViewById(R.id.textViewTotal)
         buttonCheckout =findViewById(R.id.buttonCheckout)
         toolbar =findViewById(R.id.toolbar)
+
+        val fabCadastrar : FloatingActionButton = findViewById(R.id.fabCadastrarSobremesa)
+        fabCadastrar.setOnClickListener {
+            val intent = Intent(this, CadastroProdutoActivity::class.java)
+            startActivity(intent)
+        }
 
         setupToolbar()
         setupRecyclerView()

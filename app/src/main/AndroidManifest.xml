@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CadastroProdutoActivity"
+            android:exported="false" />
+        <activity
             android:name=".SobremesaActivity"
             android:exported="false" />
         <activity
