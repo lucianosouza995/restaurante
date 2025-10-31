@@ -11,12 +11,12 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:layout_marginBottom="10dp">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarCadastro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:background="@color/app_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +25,37 @@
         app:title="Cadastro de Sobremesas"
         app:titleTextColor="@color/primary_text" />
 </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/camera_container"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:background="#E0E0E0">
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/imageViewFoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Foto do Produto"
+            android:visibility="gone"
+            tools:src="@drawable/pudim" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/buttonTirarFoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:text="Tirar Foto"
+        app:icon="@android:drawable/ic_menu_camera" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
