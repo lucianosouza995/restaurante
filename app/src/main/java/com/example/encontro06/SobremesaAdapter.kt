@@ -51,8 +51,9 @@ class SobremesaAdapter (
         holder.description.text = dessert.description
 
         Glide.with(holder.itemView.context)
-            .load(dessert.imageId)
+            .load(dessert.uri)
             .placeholder(R.drawable.ic_launcher_background)
+            .error(R.drawable.ic_launcher_foreground)
             .into(holder.image)
 
         holder.buttonPlus.setOnClickListener {

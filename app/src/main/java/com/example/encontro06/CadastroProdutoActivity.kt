@@ -1,6 +1,7 @@
 package com.example.encontro06 // Adjust package name if needed
 
 import android.Manifest
+import android.R.id.message
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
@@ -22,8 +23,12 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText // Import for TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -86,8 +91,6 @@ class CadastroProdutoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-
-
     }
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -100,7 +103,6 @@ class CadastroProdutoActivity : AppCompatActivity() {
             Toast.makeText(this, "Permissão da câmera é necessária", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun requestCameraPermission() {
         when {
@@ -195,16 +197,16 @@ class CadastroProdutoActivity : AppCompatActivity() {
             )
         }
     private fun registerProduct() {
-        // Get text from input fields
+
         val productName = editTextProductName.text.toString().trim()
         val description = editTextProductDescription.text.toString().trim()
         val priceStr = editTextProductPrice.text.toString().trim()
         val quantityStr = editTextProductQuantity.text.toString().trim()
+        val imageUriString = saveUri?.toString()
 
-        // --- Basic Validation (Optional but recommended) ---
         if (productName.isEmpty()) {
             editTextProductName.error = "Nome é obrigatório"
-            return // Stop the function if validation fails
+            return
         }
         if (priceStr.isEmpty()) {
             editTextProductPrice.error = "Preço é obrigatório"
@@ -215,28 +217,40 @@ class CadastroProdutoActivity : AppCompatActivity() {
             return
         }
 
-        // --- Placeholder Action (No Database) ---
-        // For now, just show a Toast message with the entered data
-        val message = """
-            Produto Cadastrado (Simulação):
-            Nome: $productName
-            Descrição: $description
-            Preço: $priceStr
-            Quantidade: $quantityStr
-        """.trimIndent()
+        val price = priceStr.toDoubleOrNull()
 
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        val quantity = quantityStr.toIntOrNull()
 
-        // Here you would typically add code to save the data to a database
-        // or send it to an API.
+        if (price == null) {
+            editTextProductPrice.error = "Preço inválido"
+            return
+        }
+        if (quantity == null) {
+            editTextProductQuantity.error = "Quantidade Inválida"
+            return
+        }
 
-        // Optionally, clear the fields after successful "registration"
-        // editTextProductName.text?.clear()
-        // editTextProductDescription.text?.clear()
-        // editTextProductPrice.text?.clear()
-        // editTextProductQuantity.text?.clear()
 
-        // Optionally, navigate back or to another screen
-        // finish() // Closes this activity
+
+        val novaSobremesa = Sobremesa(
+            name = productName,
+            description = description,
+            price = price,
+            stockQuantity = quantity,
+            uri = imageUriString
+        )
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO){
+                    val db = AppDatabase.getInstance(applicationContext)
+                    db.sobremesaDao().insert(novaSobremesa)
+                }
+                Toast.makeText(this@CadastroProdutoActivity, "Produto cadastrado!",Toast.LENGTH_LONG).show()
+                finish()
+            } catch (e: Exception) {
+            Log.e("CadastroProduto","falha ao gravar produto", e)
+                Toast.makeText(this@CadastroProdutoActivity, "Erro ao gravar: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

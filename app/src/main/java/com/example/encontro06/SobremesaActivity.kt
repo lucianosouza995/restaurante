@@ -2,15 +2,19 @@ package com.example.encontro06
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -47,8 +51,15 @@ private val dessertList = mutableListOf<Sobremesa>()
 
         setupToolbar()
         setupRecyclerView()
-        loadDesserts()
+
         }
+    override fun onResume(){
+        super.onResume()
+        lifecycleScope.launch {
+            loadDesserts()
+            dessertAdapter.notifyDataSetChanged()
+        }
+    }
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Sobremesas"
@@ -65,14 +76,19 @@ private val dessertList = mutableListOf<Sobremesa>()
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = dessertAdapter
     }
-    private fun loadDesserts() {
+    private suspend fun loadDesserts() {
         dessertList.clear()
+        try {
+            val dessertsFromDb: List<Sobremesa>
+            withContext(Dispatchers.IO) {
+                val db = AppDatabase.getInstance(this@SobremesaActivity)
+                dessertsFromDb = db.sobremesaDao().getALL()
+            }
+            dessertList.addAll(dessertsFromDb)
 
-        dessertList.add(Sobremesa(1,"Pudim de Leite Condensado", "Clássico Pudim",15.00,R.drawable.pudim ))
-        dessertList.add(Sobremesa(2,"Sorvete Artesanal", "2 bolas de sorvete...", 20.00, R.drawable.sorvete))
-        dessertList.add(Sobremesa(3, "Mousse de Maracujá", "Leve e aerado...", 18.00, R.drawable.mousse))
-        dessertList.add(Sobremesa(4, "Brigadeiro Gourmet", "Delisioso brigadeiro...", 8.00, R.drawable.brigadeiro_gourmet))
-        dessertList.add(Sobremesa(5, "Bolo de Chocolate Intenso", "Fatia generosa de bolo...", 22.00, R.drawable.bolo_de_chocolate))
+        } catch (e: Exception){
+            Log.e("SobremesaActivity", "Erro ao carregar sobremesas ")
+        }
 
     }
     private fun updateCart(dessert : Sobremesa){
