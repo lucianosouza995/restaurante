@@ -74,7 +74,7 @@ private val dessertList = mutableListOf<Sobremesa>()
         dessertAdapter = SobremesaAdapter(dessertList, onQuantityChanged = { dessert ->
             updateCart(dessert)},
 
-            onDeleteCliked = { dessert ->
+            onDeleteClicked = { dessert ->
                 confirmDeleteDessert(dessert)
             }
         )

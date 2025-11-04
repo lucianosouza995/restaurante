@@ -16,7 +16,7 @@ import androidx.core.view.isVisible
 class SobremesaAdapter (
     private val desserts: List<Sobremesa>,
     private val onQuantityChanged:(Sobremesa) -> Unit,
-    private val onDeleteCliked: (Sobremesa) -> Unit
+    private val onDeleteClicked: (Sobremesa) -> Unit
     ) : RecyclerView.Adapter<SobremesaAdapter.DessertViewHolder>() {
 
     inner class DessertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -72,7 +72,7 @@ class SobremesaAdapter (
             }
         }
         holder.buttonDelete.setOnClickListener {
-            onDeleteCliked(dessert)
+            onDeleteClicked(dessert)
         }
         updateItemView(holder, dessert)
     }
