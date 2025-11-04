@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -68,11 +70,15 @@ private val dessertList = mutableListOf<Sobremesa>()
             finish()
         }
     }
-
     private fun setupRecyclerView() {
-        dessertAdapter = SobremesaAdapter(dessertList) { dessert ->
-            updateCart(dessert)
-        }
+        dessertAdapter = SobremesaAdapter(dessertList, onQuantityChanged = { dessert ->
+            updateCart(dessert)},
+
+            onDeleteCliked = { dessert ->
+                confirmDeleteDessert(dessert)
+            }
+        )
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = dessertAdapter
     }
@@ -100,12 +106,46 @@ private val dessertList = mutableListOf<Sobremesa>()
         }
         updateTotal()
     }
-    private fun updateTotal() {
+        private fun updateTotal() {
         val total = cart.values.sumOf { it.price * it.quantity }
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
         textViewTotal.text = currencyFormat.format(total)
         buttonCheckout.isEnabled = total > 0
 
+    }
+    private fun confirmDeleteDessert(dessert: Sobremesa){
+        AlertDialog.Builder(this)
+            .setTitle("Conformar Exclusão")
+            .setMessage("Tem certeza que deseja excluir ${dessert.name}")
+            .setPositiveButton("Excluir"){  _, _ ->
+                deleteDessertfromDatabase(dessert)
+            }
+            .setNegativeButton("Cancelar", null).show()
+    }
+
+    private fun deleteDessertfromDatabase(dessert: Sobremesa) {
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val db = AppDatabase.getInstance(this@SobremesaActivity)
+                    db.sobremesaDao().delete(dessert)
+                }
+                val position = dessertList.indexOf(dessert)
+                if (position != -1) {
+                    dessertList.removeAt(position)
+                    dessertAdapter.notifyItemRemoved(position)
+                }
+                dessert.quantity = 0
+                updateCart(dessert)
+
+                Toast.makeText(this@SobremesaActivity,"${dessert.name} excluído",Toast.LENGTH_SHORT).show()
+
+
+            } catch (e: Exception) {
+                Log.e("SobremesaActivity", "Erro ao excluir", e)
+                Toast.makeText(this@SobremesaActivity, "Erro ao excluir", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

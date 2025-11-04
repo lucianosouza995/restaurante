@@ -1,6 +1,7 @@
 package com.example.encontro06
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,5 +14,7 @@ interface SobremesaDao {
     @Query("SELECT * FROM Sobremesa ORDER BY nome_sobremesa ASC")
     suspend fun getALL(): List<Sobremesa>
 
+    @Delete
+    suspend fun delete(sobremesa: Sobremesa)
 
 }

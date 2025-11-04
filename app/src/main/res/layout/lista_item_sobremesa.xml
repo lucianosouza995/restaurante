@@ -15,6 +15,17 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <ImageButton
+            android:id="@+id/buttonDelete_2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Excluir sobremesa"
+            app:tint="@android:color/holo_red_light"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <ImageView
             android:id="@+id/imageViewDessert_2"
             android:layout_width="80dp"
