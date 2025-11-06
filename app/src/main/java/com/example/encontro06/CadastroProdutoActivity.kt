@@ -1,7 +1,7 @@
 package com.example.encontro06 // Adjust package name if needed
 
 import android.Manifest
-import android.R.id.message
+import android.R.attr.id
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
@@ -24,8 +24,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textfield.TextInputEditText // Import for TextInputEditText
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,6 +53,10 @@ class CadastroProdutoActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
 
     private var saveUri: Uri? = null
+
+    private val firestoreDb = Firebase.firestore
+
+    private var sobremesaAtual: Sobremesa? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,15 +87,36 @@ class CadastroProdutoActivity : AppCompatActivity() {
                 requestCameraPermission()
             }
             else {
-                    tirarFoto()
+                tirarFoto()
 
             }
         }
         toolbar = findViewById(R.id.toolbarCadastro)
         setSupportActionBar(toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        val sobremesaId = intent.getIntExtra("SOBREMESA", -1)
+        if (sobremesaId) {
+            loadDataSobremesa(sobremesaId)
+        }
+    }
+    private fun loadDataSobremesa(){
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val db = AppDatabase.getInstance(applicationContext)
+                    sobremesaAtual = db.sobremesaDao().getById(id)
+                }
+
+            }catch (e: Exception){
+
+            }
+        }
     }
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -186,16 +212,16 @@ class CadastroProdutoActivity : AppCompatActivity() {
                     imageView.visibility = View.VISIBLE
                     previewView.visibility = View.GONE
                     buttonTirarFoto.text = "Tirar Outra Foto"
-                    }
+                }
 
                 // Chamado em caso de ERRO
-                    override fun onError(exc: ImageCaptureException) {
-                        Log.e("tirarFoto", "Falha ao capturar foto: ${exc.message}", exc)
-                        Toast.makeText(baseContext, "Falha ao salvar foto.", Toast.LENGTH_SHORT).show()
-                    }
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e("tirarFoto", "Falha ao capturar foto: ${exc.message}", exc)
+                    Toast.makeText(baseContext, "Falha ao salvar foto.", Toast.LENGTH_SHORT).show()
                 }
-            )
-        }
+            }
+        )
+    }
     private fun registerProduct() {
 
         val productName = editTextProductName.text.toString().trim()
@@ -230,9 +256,8 @@ class CadastroProdutoActivity : AppCompatActivity() {
             return
         }
 
-
-
-        val novaSobremesa = Sobremesa(
+        val sobremesaParaSalvar = Sobremesa(
+            id = sobremesaAtual?.id ?: 0,
             name = productName,
             description = description,
             price = price,
@@ -241,16 +266,36 @@ class CadastroProdutoActivity : AppCompatActivity() {
         )
         lifecycleScope.launch {
             try {
+                var sobremesaFinalParafirestore: Sobremesa
                 withContext(Dispatchers.IO){
                     val db = AppDatabase.getInstance(applicationContext)
-                    db.sobremesaDao().insert(novaSobremesa)
+                    if(sobremesaAtual == null){
+                        val idRoom = db.sobremesaDao().insert(sobremesaParaSalvar)
+                        sobremesaFinalParafirestore = sobremesaParaSalvar.copy(id = idRoom.toInt)
+                    }else{
+                        db.sobremesaDao().update(sobremesaParaSalvar)
+                        sobremesaFinalParafirestore = sobremesaParaSalvar
+
+                    }
                 }
-                Toast.makeText(this@CadastroProdutoActivity, "Produto cadastrado!",Toast.LENGTH_LONG).show()
-                finish()
-            } catch (e: Exception) {
-            Log.e("CadastroProduto","falha ao gravar produto", e)
-                Toast.makeText(this@CadastroProdutoActivity, "Erro ao gravar: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+                firestoreDb.collection("sobremesas")
+                    .document(sobremesaFinalParafirestore.id.toString())
+                    .set(sobremesaFinalParafirestore)
+                    .addOnSuccessListener {
+                        val toastMessage = if(sobremesaAtual == null)"Produto Cadastrado!"
+                        else "Produto atualizado!"
+                        Toast.makeText(this@CadastroProdutoActivity, toastMessage, Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("CadastroProduto", "Falha ao gravar no Firestore", e)
+                        Toast.makeText(this@CadastroProdutoActivity, "Erro ao salvar na nuvem",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }catch (e: Exception) {
+                Log.e("CadastroProduto", "Falha ao gravar produto", e)
+                Toast.makeText(this@CadastroProdutoActivity, "Erro ao gravar local", Toast.LENGTH_SHORT).show()
+                }
         }
+
     }
 }

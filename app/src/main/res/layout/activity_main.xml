@@ -5,41 +5,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:columnCount="2"
-    android:rowCount="8"
-    android:padding="16dp"
+    android:rowCount="9"  android:padding="16dp"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:layout_marginBottom="8dp">
 
-        <ImageView
-            android:id="@+id/imagem_logo"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:src="@drawable/logo"
-            android:scaleType="centerInside"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:layout_columnSpan="2"/>
-
-
-
-        <TextView
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/buttonLogout"
             android:layout_width="wrap_content"
-            android:text="TABELA DE CATEGORIAS"
-            android:textSize="16sp"
-            android:textStyle="bold|italic"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:layout_columnSpan="2"
-            android:layout_marginBottom="8dp">
+            android:layout_height="wrap_content"
+            android:text="Sair"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/holo_orange_dark" />
+    </LinearLayout>
 
-        </TextView>
+    <ImageView
+        android:id="@+id/imagem_logo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:scaleType="centerInside"
+        android:layout_column="0"
+        android:layout_row="1" android:layout_columnSpan="2"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="TABELA DE CATEGORIAS"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        android:layout_column="0"
+        android:layout_row="2" android:layout_columnSpan="2"
+        android:layout_marginBottom="8dp">
+
+    </TextView>
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_row="2"
-        android:layout_column="0"
+        android:layout_row="3" android:layout_column="0"
         android:layout_columnSpan="2"
         android:layout_marginBottom="16dp"
         android:gravity="center">
@@ -74,8 +86,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_column="0"
-        android:layout_row="3"
-        android:layout_columnSpan="2"
+        android:layout_row="4" android:layout_columnSpan="2"
         android:layout_marginBottom="8dp"/>
 
     <ImageView
@@ -83,8 +94,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_column="0"
-        android:layout_row="4"
-        android:layout_gravity="left"
+        android:layout_row="5" android:layout_gravity="left"
         android:layout_marginEnd="16dp"
         android:src="@drawable/risoto"
         android:scaleType="centerCrop"/>
@@ -94,17 +104,16 @@
         android:layout_width="wrap_content"
         android:orientation="vertical"
         android:layout_column="1"
-        android:layout_row="4"
-        android:layout_columnWeight="1"
+        android:layout_row="5" android:layout_columnWeight="1"
         android:layout_gravity="fill_horizontal">
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TABELA INFORMAÇÕES"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TABELA INFORMAÇÕES"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,8 +140,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_column="0"
-        android:layout_row="5"
-        android:layout_columnSpan="2"
+        android:layout_row="6" android:layout_columnSpan="2"
         android:layout_marginTop="16dp"/>
 
     <Button
@@ -140,8 +148,7 @@
         android:layout_height="wrap_content"
         android:text="Play"
         android:layout_column="0"
-        android:layout_row="6"
-        android:layout_columnSpan="2"
+        android:layout_row="7" android:layout_columnSpan="2"
         android:layout_marginBottom="16sp"/>
 
     <TextView
@@ -151,8 +158,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_column="0"
-        android:layout_row="7"
-        android:layout_columnSpan="2"
+        android:layout_row="8" android:layout_columnSpan="2"
         android:layout_gravity="center_horizontal"/>
 
 </GridLayout>

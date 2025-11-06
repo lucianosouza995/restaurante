@@ -22,6 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/primary_text"
         app:title="Cadastro de Sobremesas"
         app:titleTextColor="@color/primary_text" />
 </LinearLayout>
@@ -67,9 +68,11 @@
             android:id="@+id/editTextProductName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
             android:hint="Nome do Produto"
             android:inputType="textCapWords"
-            android:layout_marginTop="100dp"/>
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/primary_text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -83,6 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Descrição"
+            android:textColor="@color/primary_text"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:gravity="top"/>
@@ -99,6 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Preço (ex: 19.99)"
+            android:textColor="@color/primary_text"
             android:inputType="numberDecimal"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,6 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Quantidade em Estoque"
+            android:textColor="@color/primary_text"
             android:inputType="number"/>
     </com.google.android.material.textfield.TextInputLayout>
 

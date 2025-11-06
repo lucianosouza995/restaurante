@@ -15,13 +15,14 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/app_background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/primary_text"
         app:title="Sobremesas"
-        app:titleTextColor="@color/primary_text"
 
-        />
+        app:titleTextColor="@color/primary_text" />
 
 
     <androidx.recyclerview.widget.RecyclerView

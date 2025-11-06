@@ -14,26 +14,37 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.util.Locale
 
 class SobremesaActivity : AppCompatActivity() {
-private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
-private lateinit var textViewTotal: TextView
+    private lateinit var textViewTotal: TextView
 
-private lateinit var buttonCheckout: Button
+    private lateinit var buttonCheckout: Button
 
-private lateinit var toolbar: Toolbar
+    private lateinit var toolbar: Toolbar
 
-private lateinit var dessertAdapter: SobremesaAdapter
+    private lateinit var dessertAdapter: SobremesaAdapter
 
-private val dessertList = mutableListOf<Sobremesa>()
+    private val dessertList = mutableListOf<Sobremesa>()
 
     private val cart = mutableMapOf<Int, Sobremesa>()
+
+    private val db = Firebase.firestore
+
+    private var firestoreListenner: ListenerRegistration? = null
+
+    private val firestoreDb = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,14 +65,51 @@ private val dessertList = mutableListOf<Sobremesa>()
         setupToolbar()
         setupRecyclerView()
 
-        }
+        setupFirestoreListenner()
+
+    }
     override fun onResume(){
         super.onResume()
-        lifecycleScope.launch {
-            loadDesserts()
-            dessertAdapter.notifyDataSetChanged()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        firestoreListenner?.remove()
+    }
+    private fun  setupFirestoreListenner(){
+        firestoreListenner = firestoreDb.collection("sobremesas")
+            .addSnapshotListener {  snapshots, e ->
+                if (e !=null){
+                    Log.e("SobremesaActivity", "Falha no listenner", e)
+                    return@addSnapshotListener
+                }
+                if(snapshots != null){
+                    Log.e("SobremesaActivity", "Mudanças recebidas do Firestore")
+                    lifecycleScope.launch {
+                        syncDblocal(snapshots.documents)
+                        loadDesserts()
+                    }
+                }
+            }
+    }
+    private suspend fun syncDblocal(documents: List<com.google.firebase.firestore.DocumentSnapshot>) {
+        withContext(Dispatchers.IO) {
+            val db = AppDatabase.getInstance(this@SobremesaActivity)
+            for (document in documents) {
+                try {
+                    val sobremesa = document.toObject<Sobremesa>()
+                    if (sobremesa != null) {
+                        db.sobremesaDao().insert(sobremesa)
+                    }
+
+                }catch (e: Exception){
+                    Log.e("SobremesaActivity", "Falha ao converter documento")
+                }
+            }
         }
     }
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Sobremesas"
@@ -76,7 +124,12 @@ private val dessertList = mutableListOf<Sobremesa>()
 
             onDeleteClicked = { dessert ->
                 confirmDeleteDessert(dessert)
+            },
+            onEditClicked = { dessert ->
+                // NOVO: Chama a função para iniciar a edição
+                startEditDessertActivity(dessert)
             }
+
         )
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -85,12 +138,20 @@ private val dessertList = mutableListOf<Sobremesa>()
     private suspend fun loadDesserts() {
         dessertList.clear()
         try {
-            val dessertsFromDb: List<Sobremesa>
-            withContext(Dispatchers.IO) {
-                val db = AppDatabase.getInstance(this@SobremesaActivity)
-                dessertsFromDb = db.sobremesaDao().getALL()
-            }
-            dessertList.addAll(dessertsFromDb)
+            db.collection("Sobremesa")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val sobremesa = document.toObject(Sobremesa::class.java)
+
+                        dessertList.add(sobremesa)
+                    }
+                    dessertAdapter.notifyDataSetChanged()
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SobremesaActivity", "Erro ao carregar sobremesa", e)
+                }
+
 
         } catch (e: Exception){
             Log.e("SobremesaActivity", "Erro ao carregar sobremesas ")
@@ -106,7 +167,7 @@ private val dessertList = mutableListOf<Sobremesa>()
         }
         updateTotal()
     }
-        private fun updateTotal() {
+    private fun updateTotal() {
         val total = cart.values.sumOf { it.price * it.quantity }
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
@@ -147,5 +208,11 @@ private val dessertList = mutableListOf<Sobremesa>()
                 Toast.makeText(this@SobremesaActivity, "Erro ao excluir", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    private fun startEditDessertActivity(dessert: Sobremesa) {
+        val intent = Intent(this, CadastroProdutoActivity::class.java)
+        // A "chave" para o modo de edição é passar o ID do item
+        intent.putExtra("SOBREMESA_ID", dessert.id)
+        startActivity(intent)
     }
 }

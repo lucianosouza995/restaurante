@@ -16,7 +16,8 @@ import androidx.core.view.isVisible
 class SobremesaAdapter (
     private val desserts: List<Sobremesa>,
     private val onQuantityChanged:(Sobremesa) -> Unit,
-    private val onDeleteClicked: (Sobremesa) -> Unit
+    private val onDeleteClicked: (Sobremesa) -> Unit,
+    private val onEditClicked: (Sobremesa) -> Unit
     ) : RecyclerView.Adapter<SobremesaAdapter.DessertViewHolder>() {
 
     inner class DessertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,6 +31,8 @@ class SobremesaAdapter (
         val buttonMinus: ImageButton = itemView.findViewById(R.id.buttonMinus_2)
         val buttonAddToCart: Button = itemView.findViewById(R.id.buttonAddToCart_2)
         val buttonDelete: ImageButton = itemView.findViewById(R.id.buttonDelete_2)
+
+        val buttonEdit: ImageButton = itemView.findViewById(R.id.buttonEdit_2)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DessertViewHolder {
@@ -74,7 +77,13 @@ class SobremesaAdapter (
         holder.buttonDelete.setOnClickListener {
             onDeleteClicked(dessert)
         }
+
+        holder.buttonEdit.setOnClickListener {
+            onEditClicked(dessert)
+        }
         updateItemView(holder, dessert)
+
+
     }
     private fun updateItemView(holder: DessertViewHolder, dessert: Sobremesa) {
         val locale = Locale("pt", "BR")

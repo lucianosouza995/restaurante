@@ -17,14 +17,28 @@
 
         <ImageButton
             android:id="@+id/buttonDelete_2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_delete"
+            android:layout_width="31dp"
+            android:layout_height="29dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Excluir sobremesa"
-            app:tint="@android:color/holo_red_light"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEdit_2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="@android:color/holo_red_light" />
+
+        <ImageButton
+            android:id="@+id/buttonEdit_2"
+            android:layout_width="31dp"
+            android:layout_height="29dp"
+            android:layout_marginTop="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Editar sobremesa"
+            android:src="@drawable/ic_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/md_theme_primary" />
 
         <ImageView
             android:id="@+id/imageViewDessert_2"
@@ -44,10 +58,11 @@
             android:textColor="@color/primary_text"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@id/imageViewDessert_2"
-            app:layout_constraintStart_toEndOf="@id/imageViewDessert_2"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Pudim de Leite Condensado"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/imageViewDessert_2"
+            app:layout_constraintTop_toTopOf="@id/imageViewDessert_2"
+            tools:text="Pudim de Leite Condensado" />
 
         <TextView
             android:id="@+id/textViewPrice_2"
