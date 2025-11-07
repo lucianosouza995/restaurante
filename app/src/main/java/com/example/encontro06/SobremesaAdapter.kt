@@ -16,9 +16,12 @@ import androidx.core.view.isVisible
 class SobremesaAdapter (
     private val desserts: List<Sobremesa>,
     private val onQuantityChanged:(Sobremesa) -> Unit,
-    private val onDeleteClicked: (Sobremesa) -> Unit,
-    private val onEditClicked: (Sobremesa) -> Unit
-    ) : RecyclerView.Adapter<SobremesaAdapter.DessertViewHolder>() {
+
+    // Listeners para Edição (clique simples) e Exclusão (clique longo)
+    private val onEditClicked: (Sobremesa) -> Unit,
+    private val onDeleteClicked: (Sobremesa) -> Unit
+
+) : RecyclerView.Adapter<SobremesaAdapter.DessertViewHolder>() {
 
     inner class DessertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.textViewName_2)
@@ -30,9 +33,28 @@ class SobremesaAdapter (
         val buttonPlus: ImageButton = itemView.findViewById(R.id.buttonPlus_2)
         val buttonMinus: ImageButton = itemView.findViewById(R.id.buttonMinus_2)
         val buttonAddToCart: Button = itemView.findViewById(R.id.buttonAddToCart_2)
-        val buttonDelete: ImageButton = itemView.findViewById(R.id.buttonDelete_2)
 
-        val buttonEdit: ImageButton = itemView.findViewById(R.id.buttonEdit_2)
+        // Bloco de inicialização para os cliques no card
+        init {
+            // Clique SIMPLES para Editar
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onEditClicked(desserts[position])
+                }
+            }
+
+            // Clique LONGO para Excluir
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onDeleteClicked(desserts[position])
+                    true // Clique consumido
+                } else {
+                    false
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DessertViewHolder {
@@ -43,7 +65,6 @@ class SobremesaAdapter (
 
     override fun getItemCount(): Int {
         return desserts.size
-
     }
 
     override fun onBindViewHolder(holder: DessertViewHolder, position: Int) {
@@ -51,40 +72,43 @@ class SobremesaAdapter (
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
 
+        // Preenche as views com os dados
         holder.name.text = dessert.name
         holder.price.text = "Preço: ${currencyFormat.format(dessert.price)}"
         holder.description.text = dessert.description
 
+        // Carrega a imagem
         Glide.with(holder.itemView.context)
             .load(dessert.uri)
             .placeholder(R.drawable.ic_launcher_background)
             .error(R.drawable.ic_launcher_foreground)
             .into(holder.image)
 
+        // --- Lógica do Carrinho ---
+
         holder.buttonPlus.setOnClickListener {
             dessert.quantity++
             updateItemView(holder, dessert)
-            onQuantityChanged(dessert)
-
+            onQuantityChanged(dessert) // Avisa a SobremesaActivity sobre a mudança
         }
+
+        // --- CORREÇÃO APLICADA AQUI ---
         holder.buttonMinus.setOnClickListener {
             if (dessert.quantity > 0) {
                 dessert.quantity--
+
+                // 1. A linha 129 foi corrigida de "updateItemView_" para a chamada completa
                 updateItemView(holder, dessert)
+
+                // 2. Adicionado "onQuantityChanged" para atualizar o total no carrinho
                 onQuantityChanged(dessert)
             }
         }
-        holder.buttonDelete.setOnClickListener {
-            onDeleteClicked(dessert)
-        }
 
-        holder.buttonEdit.setOnClickListener {
-            onEditClicked(dessert)
-        }
         updateItemView(holder, dessert)
-
-
     }
+
+    // Função que atualiza o total do item
     private fun updateItemView(holder: DessertViewHolder, dessert: Sobremesa) {
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
@@ -94,6 +118,5 @@ class SobremesaAdapter (
         holder.itemTotal.text = "Total: ${currencyFormat.format(total)}"
         holder.itemTotal.isVisible = dessert.quantity > 0
         holder.buttonAddToCart.isEnabled = dessert.quantity > 0
-
     }
 }
