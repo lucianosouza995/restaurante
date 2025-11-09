@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update // NOVO: Importar
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SobremesaDao {
@@ -19,7 +20,7 @@ interface SobremesaDao {
     suspend fun delete(sobremesa: Sobremesa)
 
     @Query("SELECT * FROM Sobremesa ORDER BY nome_sobremesa ASC")
-    suspend fun getALL(): List<Sobremesa>
+    fun getALL(): Flow<List<Sobremesa>>
 
     // NOVO: Adicione esta função
     @Query("SELECT * FROM Sobremesa WHERE id_sobremesa = :id")

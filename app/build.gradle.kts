@@ -68,6 +68,12 @@ dependencies {
     // Esta versão estava errada antes, vamos usar uma correta:
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+
+    implementation("androidx.activity:activity-ktx:1.11.0")
+
     // --- CameraX ---
     val camerax_version = "1.3.0"
     implementation("androidx.camera:camera-core:${camerax_version}")
