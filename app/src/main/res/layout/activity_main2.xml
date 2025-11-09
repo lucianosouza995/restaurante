@@ -17,6 +17,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="144dp"
             android:text="Sair"
             android:textColor="?attr/colorError"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,14 +27,16 @@
             android:id="@+id/logo_image"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:src="@drawable/logo"
+            android:layout_marginTop="48dp"
             android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/logo"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="50dp"/> <TextView
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
         android:id="@+id/title_categorias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
