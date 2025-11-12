@@ -68,9 +68,9 @@ dependencies {
     // Esta versão estava errada antes, vamos usar uma correta:
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.3")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
 
     implementation("androidx.activity:activity-ktx:1.11.0")
 

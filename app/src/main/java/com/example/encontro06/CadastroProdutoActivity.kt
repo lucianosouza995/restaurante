@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -23,6 +24,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore // MUDANÇA: Importa o Firestore
@@ -56,7 +58,9 @@ class CadastroProdutoActivity : AppCompatActivity() {
     private var saveUri: Uri? = null
 
     // MUDANÇA: Variável para o banco de dados Firestore (nuvem)
-    private val firestoreDb = Firebase.firestore
+    private val sobremesaViewModel: SobremesaViewModel by viewModels {
+        SobremesaViewModelFactory(application)
+    }
 
     // MUDANÇA: Variável para guardar o item em modo de edição
     // Inicia como null. Se for preenchida, estamos no "Modo Edição".
@@ -120,16 +124,13 @@ class CadastroProdutoActivity : AppCompatActivity() {
 
     // MUDANÇA: Nova função para carregar dados do Room no Modo Edição
     private fun loadDadosSobremesa(id: Int) {
-        lifecycleScope.launch {
-            try {
-                // Busca o item no banco local (Room) em uma thread de background
-                withContext(Dispatchers.IO) {
-                    val db = AppDatabase.getInstance(applicationContext)
-                    sobremesaAtual = db.sobremesaDao().getById(id)
-                }
-
+        // O ViewModel busca os dados (do Repository, que busca do Room)
+        // e nos entrega via LiveData (que só dispara uma vez)
+        sobremesaViewModel.getById(id).observe(this, Observer { sobremesa ->
+            if (sobremesa != null) {
+                sobremesaAtual = sobremesa
                 // Se o item foi encontrado, preenche a UI na thread principal
-                sobremesaAtual?.let { sobremesa ->
+
                     editTextProductName.setText(sobremesa.name)
                     editTextProductDescription.setText(sobremesa.description)
                     editTextProductPrice.setText(sobremesa.price.toString())
@@ -142,16 +143,13 @@ class CadastroProdutoActivity : AppCompatActivity() {
                         imageView.visibility = View.VISIBLE
                         previewView.visibility = View.GONE
                         buttonTirarFoto.text = "Tirar Outra Foto"
-                    }
+
                 }
-            } catch (e: Exception) {
-                Log.e("CadastroProduto", "Falha ao carregar sobremesa", e)
-                Toast.makeText(this@CadastroProdutoActivity, "Erro ao carregar dados", Toast.LENGTH_SHORT).show()
             }
-        }
+        })
     }
 
-    // MUDANÇA: Função de salvar agora integrada com Room e Firestore
+
     private fun registerProduct() {
 
         // ... (Sua lógica de validação de campos vazios, etc.)
@@ -195,49 +193,22 @@ class CadastroProdutoActivity : AppCompatActivity() {
         )
 
         // Inicia a coroutine para salvar nos bancos
-        lifecycleScope.launch {
-            try {
-                var sobremesaFinalParaFirestore: Sobremesa
-
-                // 1. SALVA NO BANCO LOCAL (ROOM)
-                // Usamos withContext(Dispatchers.IO) para rodar em background
-                withContext(Dispatchers.IO) {
-                    val db = AppDatabase.getInstance(applicationContext)
-
-                    if (sobremesaAtual == null) {
-                        // MODO NOVO: Insere no Room e pega o ID recém-gerado
-                        val idGeradoPeloRoom = db.sobremesaDao().insert(sobremesaParaSalvar)
-
-                        // CORRIGE o objeto com o ID que o Room acabou de gerar
-                        sobremesaFinalParaFirestore = sobremesaParaSalvar.copy(id = idGeradoPeloRoom.toInt())
-                    } else {
-                        // MODO UPDATE: Apenas atualiza no Room
-                        db.sobremesaDao().update(sobremesaParaSalvar)
-                        // O objeto já tem o ID correto
-                        sobremesaFinalParaFirestore = sobremesaParaSalvar
-                    }
-                }
-
-                // 2. SALVA NO BANCO NA NUVEM (FIRESTORE)
-                // (Isso já roda em background, não precisa de withContext)
-                firestoreDb.collection("sobremesas")
-                    .document(sobremesaFinalParaFirestore.id.toString()) // Usa o ID do Room como ID do Documento
-                    .set(sobremesaFinalParaFirestore) // Salva o objeto corrigido
-                    .addOnSuccessListener {
-                        val toastMessage = if (sobremesaAtual == null) "Produto cadastrado!" else "Produto atualizado!"
-                        Toast.makeText(this@CadastroProdutoActivity, toastMessage, Toast.LENGTH_LONG).show()
-                        finish() // Fecha a tela e volta para a lista
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("CadastroProduto", "Falha ao gravar no Firestore", e)
-                        Toast.makeText(this@CadastroProdutoActivity, "Erro ao salvar na nuvem: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-
-            } catch (e: Exception) {
-                Log.e("CadastroProduto", "Falha ao gravar produto", e)
-                Toast.makeText(this@CadastroProdutoActivity, "Erro ao gravar localmente: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+        // --- MUDANÇA 4: Chamar o ViewModel ---
+        // A Activity não sabe mais COMO salvar, ela apenas MANDA salvar.
+        // O ViewModel (e o Repository) cuidam da lógica de Room+Firestore.
+        if (sobremesaAtual == null) {
+            sobremesaViewModel.insert(sobremesaParaSalvar)
+        } else {
+            sobremesaViewModel.update(sobremesaParaSalvar)
         }
+
+        // Como a lógica de salvar é "fire-and-forget", podemos
+        // fechar a tela imediatamente.
+        finish()
+
+        // REMOVA: Todo o bloco lifecycleScope, withContext,
+        // firestoreDb.collection(...), etc.
+
     }
 
 

@@ -7,17 +7,12 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast // Importe o Toast para dar feedback
 import androidx.recyclerview.widget.RecyclerView
 import java.text.NumberFormat
 import java.util.Locale
 import com.bumptech.glide.Glide
 import androidx.core.view.isVisible
-
-// --- EXPLICAÇÃO ---
-// O Adapter é a "ponte" entre a sua lista de dados (List<Sobremesa>)
-// e a interface gráfica (o RecyclerView).
-// Ele não sabe sobre Room ou Firestore. Ele apenas recebe uma lista
-// e a exibe.
 
 class SobremesaAdapter (
     private val desserts: List<Sobremesa>,
@@ -27,7 +22,6 @@ class SobremesaAdapter (
 
 ) : RecyclerView.Adapter<SobremesaAdapter.DessertViewHolder>() {
 
-    // ... (seu inner class DessertViewHolder está correto)
     inner class DessertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.textViewName_2)
         val price: TextView = itemView.findViewById(R.id.textViewPrice_2)
@@ -39,18 +33,22 @@ class SobremesaAdapter (
         val buttonMinus: ImageButton = itemView.findViewById(R.id.buttonMinus_2)
         val buttonAddToCart: Button = itemView.findViewById(R.id.buttonAddToCart_2)
 
+        // Bloco de inicialização para os cliques no card (Editar e Excluir)
         init {
+            // Clique SIMPLES para Editar
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onEditClicked(desserts[position])
                 }
             }
+
+            // Clique LONGO para Excluir
             itemView.setOnLongClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onDeleteClicked(desserts[position])
-                    true
+                    true // Clique consumido
                 } else {
                     false
                 }
@@ -58,7 +56,6 @@ class SobremesaAdapter (
         }
     }
 
-    // ... (onCreateViewHolder e getItemCount estão corretos)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DessertViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.lista_item_sobremesa, parent, false)
@@ -69,31 +66,29 @@ class SobremesaAdapter (
         return desserts.size
     }
 
-
     override fun onBindViewHolder(holder: DessertViewHolder, position: Int) {
         val dessert = desserts[position]
-        // ... (configuração do 'locale' e 'currencyFormat')
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
 
-        // ... (configuração de name, price, description, e Glide)
+        // Preenche as views com os dados
         holder.name.text = dessert.name
         holder.price.text = "Preço: ${currencyFormat.format(dessert.price)}"
         holder.description.text = dessert.description
 
+        // Carrega a imagem
         Glide.with(holder.itemView.context)
             .load(dessert.uri)
             .placeholder(R.drawable.ic_launcher_background)
             .error(R.drawable.ic_launcher_foreground)
             .into(holder.image)
 
-
-        // --- MUDANÇAS NA LÓGICA DO CARRINHO ---
+        // --- MUDANÇA NA LÓGICA DO CARRINHO ---
 
         holder.buttonPlus.setOnClickListener {
             dessert.quantity++
             updateItemView(holder, dessert)
-            // REMOVEMOS a chamada 'onQuantityChanged(dessert)' daqui.
+            // MUDANÇA: REMOVEMOS a chamada 'onQuantityChanged(dessert)' daqui.
             // O usuário agora precisa clicar em "Adicionar" para confirmar.
         }
 
@@ -103,11 +98,11 @@ class SobremesaAdapter (
                 updateItemView(holder, dessert)
 
                 // MUDANÇA: Se a quantidade chegar a zero,
-                // atualizamos o carrinho imediatamente para remover o item.
+                // atualizamos o carrinho principal imediatamente para remover o item.
                 if (dessert.quantity == 0) {
                     onQuantityChanged(dessert)
                 }
-                updateItemView(holder, dessert)
+                // Se for > 0, não fazemos nada, esperamos o usuário clicar em "Adicionar".
             }
         }
 
@@ -117,15 +112,14 @@ class SobremesaAdapter (
             // para atualizar o carrinho com a quantidade selecionada.
             onQuantityChanged(dessert)
 
-            // (Opcional) Você pode adicionar um Toast aqui para feedback
-            // Toast.makeText(holder.itemView.context, "${dessert.name} adicionado!", Toast.LENGTH_SHORT).show()
+            // Feedback visual para o usuário
+            Toast.makeText(holder.itemView.context, "${dessert.quantity}x ${dessert.name} adicionado(s)", Toast.LENGTH_SHORT).show()
         }
 
         updateItemView(holder, dessert)
     }
 
-    // A lógica desta função está correta e não precisa mudar.
-    // Ela habilita o botão "Adicionar" quando a quantidade é > 0.
+    // Esta função atualiza o card individual (quantidade, total do item, e ativa/desativa o botão "Adicionar")
     private fun updateItemView(holder: DessertViewHolder, dessert: Sobremesa) {
         val locale = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(locale)
@@ -134,6 +128,8 @@ class SobremesaAdapter (
         holder.quantity.text = dessert.quantity.toString()
         holder.itemTotal.text = "Total: ${currencyFormat.format(total)}"
         holder.itemTotal.isVisible = dessert.quantity > 0
+
+        // Ativa o botão "Adicionar" apenas se a quantidade for maior que zero
         holder.buttonAddToCart.isEnabled = dessert.quantity > 0
     }
 }
